@@ -1,0 +1,27 @@
+## using readLines 
+library(stringr)
+
+url = 'https://www.seoul.go.kr/coronaV/coronaStatus.do'
+
+seoul = readLines(url, encoding = 'UTF-8')
+
+idx = str_detect(seoul, '<th scope=\"row\"><p class=\"corona19_no\">')
+sum(idx) ## 753
+idx = which(idx)
+
+length(idx)
+
+corona = data.frame(corona_no = c(gsub('\t|<.*?>', '', seoul[idx])),
+                    pat_num = c(gsub('\t|<.*?>', '', seoul[idx+1])),
+                    pat_date = c(gsub('\t|<.*?>', '', seoul[idx+2])),
+                    pat_home = c(gsub('\t|<.*?>', '', seoul[idx+3])), 
+                    pat_trav = c(gsub('\t|<.*?>', '', seoul[idx+4])),
+                    pat_infec = c(gsub('\t|<.*?>', '', seoul[idx+5])),
+                    pat_hos = c(gsub('\t|<.*?>', '', seoul[idx+6])))
+
+## <.*?> : 꺽새 안에 있는 모든 문자
+## \t | <.*?> : tab과 꺽새 안의 모든 문자
+
+head(corona, 20)
+
+write.csv(corona, file = 'C:/Users/SOYOUNG/Desktop/corona19.csv')
