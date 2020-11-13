@@ -1,0 +1,37 @@
+library(glue)
+library(XML)
+library(stringr)
+
+api_key = 'key'
+url_format = 'http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey={key}&solYear={year}&solMonth={month}'
+
+
+holiday_request = function(key, year, month) glue(url_format)
+holidays = data.frame(name = character(), date = numeric())
+
+
+# request and read data
+for(y in 2018:2020)
+{
+  for(m in 1:12)
+  {
+    data = xmlToList(holiday_request(api_key, y, str_pad(m, 2, pad=0)))
+    items = data$body$items
+    
+    for(item in items)
+    {
+      if(item$isHoliday == 'Y') holidays = rbind(holidays, data.frame(holiday = item$dateName, date = item$locdate))
+    }
+  }
+}
+
+head(holidays)
+holidays[,2] = as.Date(holidays[, 2], format = '%Y%m%d' )
+
+
+###
+date = seq(as.Date('2018/1/1'), as.Date('2020/12/31'), 'day')
+d = data.frame(date = date, weekday = weekdays(date))
+
+d = d %>% mutate(hol_idx = if_else(date %in% holidays$date, 1, 0))
+d = left_join(d, holidays, by = 'date')
