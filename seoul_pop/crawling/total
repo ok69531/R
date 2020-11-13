@@ -1,0 +1,13 @@
+covid_seoul_csv = read.csv('C:/Users/SOYOUNG/Desktop/corona19.csv', header = TRUE)
+covid_date = covid_seoul_csv[, 4]
+date1 = substr(a, 1, 1)
+date2 = substr(a, 3, 4)
+
+covid = data.frame(date = as.Date(paste(2020, a1, a2), format = '%Y%m%d'), idx = rep(1))
+count_table = aggregate(idx ~ date, covid, sum)
+
+covid_seoul = left_join(d, count_table, by = 'date')
+covid_seoul = covid_seoul[-c(872:1096), ]
+colnames(covid_seoul) = c('date', 'weekday', 'hol_idx', 'holiday', 'covid_count')
+
+write.csv(covid_seoul, 'C:/Users/SOYOUNG/Desktop/covid_seoul.csv')
