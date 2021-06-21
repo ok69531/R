@@ -74,7 +74,7 @@ vis_fun = function(mapp, date_val, tz_val, path = getwd(), sdng = sdng_df, api =
 }
 
 ## exec 
-api_key = '78736172446f6b3637307978544861'
+api_key = ''
 date_val = '20210610'
 tz_val = '11'
 
