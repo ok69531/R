@@ -17,6 +17,7 @@ setwd('D:/TA/2021_1/Data_Visualization/final')
 ##### Question 1 #####
 mapp = st_read("행정구역.shp") 
 head(mapp)
+
 p = ggplot(mapp) +
   geom_sf(aes(fill = SIGUNGU_NM), colour = 'white') ## 서울시 지도, 자치구별 색상 다르게
 p
@@ -58,7 +59,6 @@ get_df_fun = function(date_val_, tz_val_, api_key_, sdng_df_)
   return(df %>% left_join(sdng_df_, by = 'H_DNG_CD'))
 }
 
-get_df_fun(date_val, tz_val, api_key, sdng_df)
 
 
 vis_fun = function(mapp, date_val, tz_val, path = getwd(), sdng = sdng_df, api = api_key)
@@ -74,9 +74,9 @@ vis_fun = function(mapp, date_val, tz_val, path = getwd(), sdng = sdng_df, api =
 }
 
 ## exec 
-api_key = ''
-date_val = '20210610'
-tz_val = '11'
+api_key = '78736172446f6b3637307978544861'
+date_val ='20200606'
+tz_val = '20'
 
 vis_fun(mapp, date_val, tz_val)
 
@@ -93,7 +93,15 @@ tz_seq[1:10] = paste0(0, tz_seq[1:10])
 for (i in 1:length(tz_seq))
   vis_fun(mapp, date_val = '20210606', tz_val = tz_seq[i])
 
-png_files = sprintf("spopvis_20210606%s.jpg", tz_seq)
-av::av_encode_video(png_files, 'output.mp4', framerate = 2)
 
+jpg_files = sprintf("spopvis_20210606%s.jpg", tz_seq)
+av::av_encode_video(rep(jpg_files, each = 12), 'output.mp4', framerate = 24)
+
+
+plot(0, 1)
+plot(mapp %>% select(SIGUNGU_CD))
+
+
+
+# ------------------------------------------------------------------------------------- #
 
